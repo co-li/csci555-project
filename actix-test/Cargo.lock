@@ -122,6 +122,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-test"
+version = "0.1.0"
+dependencies = [
+ "actix-http",
+ "actix-service",
+ "actix-web",
+ "bytes",
+ "simd-json 0.13.11",
+ "simd-json-derive",
+]
+
+[[package]]
 name = "actix-utils"
 version = "3.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -634,18 +646,6 @@ name = "hashbrown"
 version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289"
-
-[[package]]
-name = "hello-world"
-version = "0.1.0"
-dependencies = [
- "actix-http",
- "actix-service",
- "actix-web",
- "bytes",
- "simd-json 0.13.11",
- "simd-json-derive",
-]
 
 [[package]]
 name = "http"

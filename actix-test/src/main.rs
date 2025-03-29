@@ -50,7 +50,7 @@ async fn json() -> HttpResponse<Bytes> {
         .insert(SERVER, HeaderValue::from_static("A"));
     res.headers_mut()
         .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-    println!("JSON response: {:?}", res);
+    // println!("JSON response: {:?}", res);
     res
 }
 
@@ -60,18 +60,18 @@ async fn plaintext() -> HttpResponse<Bytes> {
         .insert(SERVER, HeaderValue::from_static("A"));
     res.headers_mut()
         .insert(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
-    println!("Plaintext response: {:?}", res);
+    // println!("Plaintext response: {:?}", res);
     res
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Started HTTP server: 127.0.0.1:8080");
+    // println!("Started HTTP server: 127.0.0.1:8080");
 
     // start http server
     Server::build()
         .backlog(1024)
-        .bind("tfb-actix-web", "0.0.0.0:8080", || {
+        .bind("tfb-actix-web", "0.0.0.0:8000", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .client_request_timeout(Duration::ZERO)

@@ -1,7 +1,8 @@
 #[macro_use] extern crate rocket;
 use rocket::http::{Status, ContentType};
-use rocket::tokio::time::{sleep, Duration};
+// use rocket::tokio::time::{sleep, Duration};
 
+/**
 #[get("/")]
 async fn index() -> (Status, (ContentType, &'static str)) {
     (Status::Ok, (ContentType::HTML, 
@@ -27,18 +28,20 @@ async fn delayed() -> String {
     sleep(Duration::from_secs(10)).await;
     String::from("Hello, world!")
 }
+**/
 
 #[get("/plaintext")]
 async fn plaintext() -> (Status, (ContentType, &'static str)) {
-    (Status::Ok, (ContentType::Text, "Hello, world!"))
+    (Status::Ok, (ContentType::Text, "Hello, World!"))
 }
 
 #[get("/json")]
 async fn json() -> (Status, (ContentType, &'static str)) {
-    (Status::Ok, (ContentType::JSON, "{ \"message\": \"Hello, world!\" }"))
+    (Status::Ok, (ContentType::JSON, "{\"message\":\"Hello, World!\"}"))
 }
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, delayed, plaintext, json])
+    // rocket::build().mount("/", routes![index, delayed, plaintext, json])
+    rocket::build().mount("/", routes![plaintext, json])
 }

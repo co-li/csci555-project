@@ -9,8 +9,6 @@ use std::{
     fs,
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
-    thread,
-    time::Duration,
 };
 use baseline::ThreadPool;
 use serde_json::json;
@@ -20,13 +18,13 @@ fn handle_connection(mut stream: TcpStream) {
     let request_line = buf_reader.lines().next().unwrap().unwrap();
 
     let (status_line, contents, content_type) = match &request_line[..] {
-        "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", fs::read_to_string("src/baseline.html").unwrap(), "text/html"),
-        "GET /delayed HTTP/1.1" => {
-            thread::sleep(Duration::from_secs(5));
-            ("HTTP/1.1 200 OK", fs::read_to_string("src/baseline.html").unwrap(), "text/html")
-        }
-        "GET /plaintext HTTP/1.1" => ("HTTP/1.1 200 OK", String::from("Hello, world!"), "text/plain"),
-        "GET /json HTTP/1.1" => ("HTTP/1.1 200 OK", json!({"message":  "Hello, world!"}).to_string(), "application/json"),
+        // "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", fs::read_to_string("src/baseline.html").unwrap(), "text/html"),
+        // "GET /delayed HTTP/1.1" => {
+        //     thread::sleep(Duration::from_secs(5));
+        //     ("HTTP/1.1 200 OK", fs::read_to_string("src/baseline.html").unwrap(), "text/html")
+        // }
+        "GET /plaintext HTTP/1.1" => ("HTTP/1.1 200 OK", String::from("Hello, World!"), "text/plain"),
+        "GET /json HTTP/1.1" => ("HTTP/1.1 200 OK", json!({"message":  "Hello, World!"}).to_string(), "application/json"),
         _ => ("HTTP/1.1 404 NOT FOUND", fs::read_to_string("src/404.html").unwrap(), "text/html"),
     };
     let length = contents.len();
@@ -38,8 +36,8 @@ fn handle_connection(mut stream: TcpStream) {
 }
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7000").unwrap();
-    let pool = ThreadPool::new(10);
+    let listener = TcpListener::bind("0.0.0.0:8000").unwrap();
+    let pool = ThreadPool::new(16);
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
