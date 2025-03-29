@@ -37,7 +37,7 @@ fn handle_connection(mut stream: TcpStream) {
 
 fn main() {
     let listener = TcpListener::bind("0.0.0.0:8000").unwrap();
-    let pool = ThreadPool::new(16);
+    let pool = ThreadPool::new(20);
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();

@@ -1,4 +1,4 @@
-"""A profile with two c6525-25g nodes connected by a LAN.
+"""A profile with two c220g5 nodes connected by a LAN.
 
 Instructions:
 Wait for the profile instance to start, and then log in to either host via the
@@ -14,9 +14,9 @@ request = portal.context.makeRequestRSpec()
 node1 = request.RawPC("node1")
 node2 = request.RawPC("node2")
 
-# Set each of the two to specifically request "c6525-25g" nodes (CloudLab Utah)
-node1.hardware_type = "c6525-25g"
-node2.hardware_type = "c6525-25g"
+# Set each of the two to specifically request "c220g5" nodes (CloudLab Wisc)
+node1.hardware_type = "c220g5"
+node2.hardware_type = "c220g5"
 
 # Set both nodes to use a Ubuntu 24.04 image 
 node1.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU24-64-STD";
