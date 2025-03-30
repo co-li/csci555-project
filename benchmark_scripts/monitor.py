@@ -6,16 +6,20 @@ import psutil
 import subprocess
 import sys
 import time
+import socket
+import threading
 from datetime import datetime
 from pathlib import Path
 
 
 class ProcessMonitor:
-    def __init__(self, process_pid, output_dir=None, interval=1.0):
+    def __init__(self, process_pid, output_dir=None, interval=1.0, port=None):
         self.process_pid = process_pid
         self.interval = interval
         self.running = False
         self.process = None
+        self.port = port
+        self.server_thread = None
         
         if output_dir is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -48,8 +52,45 @@ class ProcessMonitor:
         ])
         
         self.running = True
-        print(f"Started monitoring process {self.process_pid}. Press Ctrl+C to stop.")
+        
+        # Start the socket server if a port is specified
+        if self.port:
+            self.server_thread = threading.Thread(target=self.start_socket_server)
+            self.server_thread.daemon = True
+            self.server_thread.start()
+            print(f"Started monitoring process {self.process_pid}. Press Ctrl+C or send any message to port {self.port} to stop.")
+        else:
+            print(f"Started monitoring process {self.process_pid}. Press Ctrl+C to stop.")
+            
         return True
+        
+    def start_socket_server(self):
+        try:
+            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            server_socket.bind(('0.0.0.0', self.port))
+            server_socket.settimeout(1.0)  # 1 second timeout for checking self.running
+            server_socket.listen(1)
+            
+            print(f"Listening for termination messages on port {self.port}")
+            
+            while self.running:
+                try:
+                    client_socket, address = server_socket.accept()
+                    print(f"\nReceived connection from {address}. Stopping monitoring.")
+                    client_socket.close()
+                    self.running = False
+                except socket.timeout:
+                    # This is just to periodically check if self.running is still True
+                    continue
+                except Exception as e:
+                    print(f"\nError in socket server: {e}")
+                    break
+                    
+            server_socket.close()
+            
+        except Exception as e:
+            print(f"\nFailed to start socket server on port {self.port}: {e}")
 
     def monitor_loop(self):
         start_time = time.time()
@@ -162,6 +203,7 @@ def main():
     parser.add_argument('--interval', type=float, default=1.0, help='Monitoring interval in seconds')
     parser.add_argument('--output-dir', help='Directory to save monitoring data')
     parser.add_argument('--attach', type=int, help='Attach to existing process ID instead of launching new binary')
+    parser.add_argument('--port', type=int, help='Port to listen for termination messages')
     
     args = parser.parse_args()
     
@@ -179,7 +221,7 @@ def main():
         process_pid = process.pid
         print(f"Started process with PID: {process_pid}")
     
-    monitor = ProcessMonitor(process_pid, args.output_dir, args.interval)
+    monitor = ProcessMonitor(process_pid, args.output_dir, args.interval, args.port)
     if not monitor.start_monitoring():
         return 1
     
