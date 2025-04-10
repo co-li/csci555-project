@@ -17,6 +17,7 @@ use actix_web::{
 };
 use simd_json_derive::Serialize;
 use bytes::BufMut;
+use std::fs;
 
 pub const JSON_MSG_SIZE: usize = 27;
 
@@ -64,6 +65,36 @@ async fn plaintext() -> HttpResponse<Bytes> {
     res
 }
 
+async fn image() -> HttpResponse {
+    match fs::read("src/assets/sample.jpg") {
+        Ok(image_data) => {
+            let res = HttpResponse::Ok()
+                .insert_header((SERVER, "A"))
+                .insert_header((CONTENT_TYPE, "image/jpeg"))
+                .body(image_data);
+            res
+        },
+        Err(_) => {
+            HttpResponse::NotFound().body("Image not found")
+        }
+    }
+}
+
+async fn html() -> HttpResponse {
+    match fs::read("src/assets/sample.html") {
+        Ok(image_data) => {
+            let res = HttpResponse::Ok()
+                .insert_header((SERVER, "A"))
+                .insert_header((CONTENT_TYPE, "text/html"))
+                .body(image_data);
+            res
+        },
+        Err(_) => {
+            HttpResponse::NotFound().body("html not found")
+        }
+    }
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // println!("Started HTTP server: 127.0.0.1:8080");
@@ -78,7 +109,9 @@ async fn main() -> std::io::Result<()> {
                 .h1(map_config(
                     App::new()
                         .service(web::resource("/json").to(json))
-                        .service(web::resource("/plaintext").to(plaintext)),
+                        .service(web::resource("/plaintext").to(plaintext))
+                        .service(web::resource("/image").to(image))
+                        .service(web::resource("/html").to(html)),
                     |_| AppConfig::default(),
                 ))
                 .tcp()
