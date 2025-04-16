@@ -1,13 +1,10 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import { BASE_URL, DURATION, HEADERS } from './config.js';
+import { BASE_URL, DURATION, HEADERS, THRESHOLDS } from './config.js';
 
 export let options = {
   stages: DURATION.stages,
-  thresholds: {
-    http_req_duration: ['p(99)<20'],
-    checks: ['rate>0.99'],
-  },
+  thresholds: THRESHOLDS,
 };
 
 // Plaintext test - tests raw HTTP request/response performance
@@ -32,4 +29,6 @@ export default function() {
       return contentLength && parseInt(contentLength) === 'Hello, World!'.length;
     }
   });
+
+  
 } 

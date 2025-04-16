@@ -22,6 +22,11 @@ export const HEADERS = {
   'Connection': 'keep-alive',
 };
 
+export const THRESHOLDS = {
+  http_req_duration: ['p(95)<500'], // 95% of requests must complete below 500ms
+  checks: ['rate>0.99'], // 99% of checks must pass
+}
+
 export const CONCURRENCY_LEVELS = [16, 32, 64, 128, 256, 512];
 
 export function validateJsonResponse(response) {
@@ -48,4 +53,4 @@ export function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
-} 
+}

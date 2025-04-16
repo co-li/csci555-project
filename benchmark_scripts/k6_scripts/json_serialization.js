@@ -1,13 +1,10 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import { BASE_URL, DURATION, HEADERS, validateJsonResponse } from './config.js';
+import { BASE_URL, DURATION, HEADERS, validateJsonResponse, THRESHOLDS } from './config.js';
 
 export let options = {
   stages: DURATION.stages,
-  thresholds: {
-    http_req_duration: ['p(99)<50'], // 99% of requests must complete below 50ms
-    checks: ['rate>0.99'], // 99% of checks must pass
-  },
+  thresholds: THRESHOLDS,
 };
 
 // JSON endpoint test - tests serialization of a simple JSON object
