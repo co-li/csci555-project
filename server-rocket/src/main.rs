@@ -10,7 +10,7 @@ Copyright © 2025 University of Southern California
 #[macro_use] extern crate rocket;
 use rocket::http::{Status, ContentType};
 use rocket::tokio::time::{sleep, Duration};
-use rocket::{fairing::{AdHoc, self}, Rocket, Build, fs::{FileServer, relative}};
+use rocket::fs::FileServer;
 use rocket::form::Form;
 
 #[derive(FromForm)]
@@ -138,5 +138,5 @@ fn rocket() -> _ {
     rocket::build()
         // .configure(rocket::Config::figment().merge(("port", 9797)))
         .mount("/", routes![index, delayed, plaintext, json, img, imgs, vid, helloform])
-        .mount("/", FileServer::from(relative!("/assets")))
+        .mount("/", FileServer::from("assets"))
 }
