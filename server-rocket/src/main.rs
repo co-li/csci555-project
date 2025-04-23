@@ -19,7 +19,7 @@ struct HelloFormData {
     message: String,
 }
 
-
+/*
 #[get("/")]
 async fn index() -> (Status, (ContentType, &'static str)) {
     (Status::Ok, (ContentType::HTML, 
@@ -43,6 +43,7 @@ async fn index() -> (Status, (ContentType, &'static str)) {
         </html>"
     ))
 }
+*/
 
 #[get("/delayed")]
 async fn delayed() -> (Status, (ContentType, &'static str)) {
@@ -60,6 +61,7 @@ async fn json() -> (Status, (ContentType, &'static str)) {
     (Status::Ok, (ContentType::JSON, "{ \"message\": \"Hello, world!\" }"))
 }
 
+/*
 #[get("/img")]
 async fn img() -> (Status, (ContentType, &'static str)) {
     (Status::Ok, (ContentType::HTML, 
@@ -123,12 +125,13 @@ async fn vid() -> (Status, (ContentType, &'static str)) {
         </html>"
     ))
 }
+*/
 
 #[post("/helloform", data = "<data>")]
 async fn helloform(data: Form<HelloFormData>) -> (Status, (ContentType, &'static str)) {
     sleep(Duration::from_secs(data.delay)).await;
     match data.message.as_str() {
-        "Hello, world!" => (Status::Ok, (ContentType::Text, "Hello received")),
+        "Hello, world!" => (Status::Ok, (ContentType::Text, "Hello received.")),
         _ => (Status::BadRequest, (ContentType::Text, "Incorrect message received."))
     }
 }
@@ -137,6 +140,7 @@ async fn helloform(data: Form<HelloFormData>) -> (Status, (ContentType, &'static
 fn rocket() -> _ {
     rocket::build()
         // .configure(rocket::Config::figment().merge(("port", 9797)))
-        .mount("/", routes![index, delayed, plaintext, json, img, imgs, vid, helloform])
+        // .mount("/", routes![index, delayed, plaintext, json, img, imgs, vid, helloform])
+        .mount("/", routes![delayed, plaintext, json, helloform])
         .mount("/", FileServer::from("assets"))
 }

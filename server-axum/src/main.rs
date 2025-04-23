@@ -58,12 +58,12 @@ async fn hello_form(Form(data): Form<FormData>) -> impl IntoResponse {
         "Hello, world!" => (
             StatusCode::OK,
             [(header::CONTENT_TYPE, "text/plain")],
-            "Hello received",
+            "Hello received.",
         ),
         _ => (
             StatusCode::BAD_REQUEST,
             [(header::CONTENT_TYPE, "text/plain")],
-            "Incorrect message received",
+            "Incorrect message received.",
         ),
     }
 }

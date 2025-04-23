@@ -6,8 +6,7 @@ use std::{io, time::Duration};
 use actix_files as fs;
 use actix_web::{
     get, http::{
-        header::{ContentType, HeaderValue, CONTENT_TYPE, SERVER},
-        StatusCode,
+        header::{ContentType, HeaderValue, CONTENT_TYPE, SERVER}, StatusCode,
     }, post, rt::time::sleep, web::{self, Bytes, BytesMut}, App, HttpResponse, HttpServer
 };
 use bytes::BufMut;
@@ -68,6 +67,7 @@ async fn plaintext() -> HttpResponse<Bytes> {
     res
 }
 
+/*
 #[get("/img")]
 async fn img() -> HttpResponse {
     HttpResponse::Ok().insert_header(ContentType::html()).body(
@@ -131,6 +131,7 @@ async fn vid() -> HttpResponse {
         </html>"
     )
 }
+*/
 
 #[post("/helloform")]
 async fn helloform(form: web::Form<FormData>) -> HttpResponse {
@@ -144,7 +145,7 @@ async fn helloform(form: web::Form<FormData>) -> HttpResponse {
             HttpResponse::Ok()
                 .insert_header(ContentType::plaintext())
                 .body(
-                    "Hello, world!"
+                    "Hello received."
                 )
         }
         _ => {
@@ -163,10 +164,10 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .service(json)
             .service(plaintext)
-            .service(img)
-            .service(imgs)
+            // .service(img)
+            // .service(imgs)
             .service(helloform)
-            .service(vid)
+            // .service(vid)
             .service(
                 fs::Files::new("/", "assets")
                     .show_files_listing()
