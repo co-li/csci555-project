@@ -18,17 +18,16 @@ struct Worker {
 }
 
 impl Worker {
-    fn new(_id: usize, receiver: Arc<Mutex<Receiver<Job>>>) -> Worker {
+    fn new(id: usize, receiver: Arc<Mutex<Receiver<Job>>>) -> Worker {
         let thread = thread::spawn(move || loop {
             let message = receiver.lock().unwrap().recv();
 
             match message {
                 Ok(job) => {
-                    // println!("Request handled by thread #{id}");
                     job();
                 }
                 Err(_) => {
-                    // println!("Thread {id} encounters an error");
+                    println!("Thread {id} encounters an error");
                     break;
                 }
             }
