@@ -92,7 +92,7 @@ export default async function() {
     headers['Content-Type'] = 'application/json';
   } else if (endpoint === '/plaintext') {
     headers['Content-Type'] = 'text/plain';
-  } else if (endpoint === '/img') {
+  } else if (endpoint === '/0.jpg') {
     headers['Content-Type'] = 'image/jpeg';
   } else if (endpoint === '/helloform') {
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
