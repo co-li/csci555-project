@@ -27,18 +27,18 @@ fn handle_connection(mut stream: TcpStream) {
             None
         };
         let (status_line, contents, content_type) = match path {
-            Some("") => ("HTTP/1.1 200 OK", fs::read_to_string("src/baseline.html").unwrap(), "text/html"),
+            // Some("") => ("HTTP/1.1 200 OK", fs::read_to_string("src/baseline.html").unwrap(), "text/html"),
             Some("delayed") => {
                 thread::sleep(Duration::from_secs(10));
-                ("HTTP/1.1 200 OK", fs::read_to_string("src/baseline.html").unwrap(), "text/html")
+                ("HTTP/1.1 200 OK", String::from("Hello, world!"), "text/plain")
             },
             Some("plaintext") => ("HTTP/1.1 200 OK", String::from("Hello, world!"), "text/plain"),
             Some("json") => ("HTTP/1.1 200 OK", json!({"message":  "Hello, world!"}).to_string(), "application/json"),
-            Some("img") => ("HTTP/1.1 200 OK", fs::read_to_string("src/img.html").unwrap(), "text/html"),
-            Some("imgs") => ("HTTP/1.1 200 OK", fs::read_to_string("src/imgs.html").unwrap(), "text/html"),
-            Some("vid") => ("HTTP/1.1 200 OK", fs::read_to_string("src/vid.html").unwrap(), "text/html"),
-            Some(file_name) if file_name.ends_with(".jpg") => ("HTTP/1.1 200 OK", format!("assets/{}", file_name), "image/jpg"),
-            Some(file_name) if file_name.ends_with(".mp4") => ("HTTP/1.1 200 OK", format!("assets/{}", file_name), "video/mp4"),
+            // Some("img") => ("HTTP/1.1 200 OK", fs::read_to_string("src/img.html").unwrap(), "text/html"),
+            // Some("imgs") => ("HTTP/1.1 200 OK", fs::read_to_string("src/imgs.html").unwrap(), "text/html"),
+            // Some("vid") => ("HTTP/1.1 200 OK", fs::read_to_string("src/vid.html").unwrap(), "text/html"),
+            Some(file_name) if file_name.ends_with(".jpg") => ("HTTP/1.1 200 OK", format!("{}", file_name), "image/jpeg"),
+            Some(file_name) if file_name.ends_with(".mp4") => ("HTTP/1.1 200 OK", format!("{}", file_name), "video/mp4"),
             _ => ("HTTP/1.1 404 NOT FOUND", fs::read_to_string("src/404.html").unwrap(), "text/html"),
         };
     

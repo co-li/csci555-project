@@ -10,6 +10,7 @@ CONCURRENCY_LEVEL=10
 ENDPOINT="/json"
 MODE="concurrency"
 DELAY=0
+OUTPUT_DIR="output"
 
 # 10 50 100 200 500 1000
 

@@ -92,12 +92,12 @@ export default async function() {
     headers['Content-Type'] = 'application/json';
   } else if (endpoint === '/plaintext') {
     headers['Content-Type'] = 'text/plain';
-  } else if (endpoint === '/0.jpg') {
+  } else if (endpoint === '/assets/0.jpg') {
     headers['Content-Type'] = 'image/jpeg';
   } else if (endpoint === '/helloform') {
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
   } else if (endpoint === '/imgs') {
-    headers['Content-Type'] = 'image/png';
+    headers['Content-Type'] = 'image/jpeg';
   } else if (endpoint === '/vid') {
     headers['Content-Type'] = 'video/mp4';
   } else {
