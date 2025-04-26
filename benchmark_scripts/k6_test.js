@@ -3,6 +3,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
 import { Counter, Rate, Trend } from 'k6/metrics';
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.1.0/index.js';
 
 // Custom metrics
 const successRate = new Rate('success_rate');
@@ -12,7 +13,7 @@ const requestsPerSecCounter = new Counter('requests_per_sec');
 
 // Read concurrency from environment variables with defaults
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8000';
-const concurrency = __ENV.CONCURRENCY ? parseInt(__ENV.CONCURRENCY) : 10;
+const concurrency = __ENV.CONCURRENCY ? parseInt(__ENV.CONCURRENCY) : 100;
 const duration = '30s';
 const rampUpTime = '10s';
 const targetServer = BASE_URL;
@@ -147,6 +148,7 @@ export default async function() {
     // Generic checks for other endpoints
     success = check(response, {
       'status is 200': (r) => r.status === 200,
+      'content-type matches': (r) => r.headers['Content-Type'] && r.headers['Content-Type'].includes(headers['Content-Type']),
     });
   }
   
@@ -163,15 +165,19 @@ export function handleSummary(data) {
   console.log(`- Test Duration: ${duration}`);
   console.log(`- Iteration: ${iteration}`);
 
+  let endpoint_normalized = endpoint.slice(1).replaceAll("/", "_").replace(".", "_");
+
+  let output_file = "";
+  if (testType == 'concurrency') {
+    output_file = `results_concurrency_${concurrency}_${endpoint_normalized}_iter${iteration}_summary.json`;
+  }
+  else if (testType == 'spike') {
+    output_file = `results_spike_${endpoint_normalized}_summary.json`;
+  }
+  console.log(`- Output: ${output_file}`);
+
   return {
-    'stdout': JSON.stringify(data),
-    [(() => {
-      if (testType === 'concurrency') {
-        return `results_concurrency_${concurrency}_${endpoint.slice(1)}_iter${iteration}_summary.json`;
-      }
-      else if (testType === 'spike') {
-        return `results_spike_${endpoint.slice(1)}_summary.json`;
-      }
-    })()]: JSON.stringify(data),
+    'stdout': textSummary(data, { indent: " ", enableColors: true }),
+     [output_file]: JSON.stringify(data),
   };
 }

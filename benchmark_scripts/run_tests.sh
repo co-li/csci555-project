@@ -6,7 +6,7 @@
 SERVER_URL="http://localhost:8000"
 DURATION="30s"
 RAMP_UP="10s"
-CONCURRENCY_LEVEL=10
+CONCURRENCY_LEVEL=100
 ENDPOINT="/json"
 MODE="concurrency"
 DELAY=0
@@ -22,7 +22,7 @@ function show_help {
   echo "  -h, --help                   Show this help message"
   echo "  -s, --server <url>           Target server URL (default: http://localhost:8000)"
   echo "  -d, --delay <delay>    "
-  echo "  -c, --concurrency <level>    concurrency level (default: 10)"
+  echo "  -c, --concurrency <level>    concurrency level (default: 100)"
   echo "  -e, --endpoint <endpoint>    String of endpoint to test (default: /json)"
   echo "  -m, --mode <mode>             Test mode (default: concurrency)"
   echo "  -i, --iteration <num>        Iteration number (default: 1)"
