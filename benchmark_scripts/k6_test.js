@@ -19,6 +19,7 @@ const targetServer = BASE_URL;
 const delay = __ENV.DELAY ? parseInt(__ENV.DELAY) : 0;
 const endpoint = __ENV.ENDPOINT ? __ENV.ENDPOINT : '/';
 const testType = __ENV.TEST_TYPE ? __ENV.TEST_TYPE : 'concurrency';
+const iteration = __ENV.ITERATION ? parseInt(__ENV.ITERATION) : 1; // Current iteration number
 
 // TODO: /img, /imgs, /vid
 
@@ -160,20 +161,13 @@ export function handleSummary(data) {
   console.log(`- Target Server: ${targetServer}`);
   console.log(`- Concurrency Level: ${concurrency}`);
   console.log(`- Test Duration: ${duration}`);
-  console.log(() => {
-      if (testType == 'concurrency') {
-        return `results_concurrency_${concurrency}_${endpoint.slice(1)}_summary.json`;
-      }
-      else if (testType == 'spike') {
-        return `results_spike_${endpoint.slice(1)}_summary.json`;
-      }
-    })
+  console.log(`- Iteration: ${iteration}`);
 
   return {
     'stdout': JSON.stringify(data),
     [(() => {
       if (testType === 'concurrency') {
-        return `results_concurrency_${concurrency}_${endpoint.slice(1)}_summary.json`;
+        return `results_concurrency_${concurrency}_${endpoint.slice(1)}_iter${iteration}_summary.json`;
       }
       else if (testType === 'spike') {
         return `results_spike_${endpoint.slice(1)}_summary.json`;

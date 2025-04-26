@@ -11,6 +11,7 @@ ENDPOINT="/json"
 MODE="concurrency"
 DELAY=0
 OUTPUT_DIR="output"
+ITERATION=1
 
 # 10 50 100 200 500 1000
 
@@ -24,6 +25,7 @@ function show_help {
   echo "  -c, --concurrency <level>    concurrency level (default: 10)"
   echo "  -e, --endpoint <endpoint>    String of endpoint to test (default: /json)"
   echo "  -m, --mode <mode>             Test mode (default: concurrency)"
+  echo "  -i, --iteration <num>        Iteration number (default: 1)"
   echo ""
 }
 
@@ -55,6 +57,10 @@ while [[ $# -gt 0 ]]; do
       MODE="$2"
       shift 2
       ;;
+    -i|--iteration)
+      ITERATION="$2"
+      shift 2
+      ;;
     *)
       echo "Unknown option: $1"
       show_help
@@ -73,6 +79,7 @@ echo "Concurrency Levels: ${CONCURRENCY_LEVEL}"
 echo "Endpoint:         $ENDPOINT"
 echo "Test Mode:        $MODE"
 echo "Delay:           $DELAY"
+echo "Iteration:       $ITERATION"
 echo "==============================================="
 
 # Set environment variables for k6
@@ -81,6 +88,7 @@ export CONCURRENCY="$CONCURRENCY_LEVEL"
 export ENDPOINT="$ENDPOINT"
 export TEST_TYPE="$MODE"
 export DELAY="$DELAY"
+export ITERATION="$ITERATION"
 
 # Run k6 test
 if [[ "$MODE" == "spike" ]]; then
