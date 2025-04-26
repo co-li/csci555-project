@@ -11,7 +11,7 @@ ENDPOINT="/json"
 MODE="concurrency"
 DELAY=0
 OUTPUT_DIR="output"
-ITERATION=1
+ITERATIONS=1
 
 # 10 50 100 200 500 1000
 
@@ -58,7 +58,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     -i|--iteration)
-      ITERATION="$2"
+      ITERATIONS="$2"
       shift 2
       ;;
     *)
@@ -79,7 +79,7 @@ echo "Concurrency Levels: ${CONCURRENCY_LEVEL}"
 echo "Endpoint:         $ENDPOINT"
 echo "Test Mode:        $MODE"
 echo "Delay:           $DELAY"
-echo "Iteration:       $ITERATION"
+echo "Iterations:       $ITERATIONS"
 echo "==============================================="
 
 # Set environment variables for k6
@@ -88,15 +88,19 @@ export CONCURRENCY="$CONCURRENCY_LEVEL"
 export ENDPOINT="$ENDPOINT"
 export TEST_TYPE="$MODE"
 export DELAY="$DELAY"
-export ITERATION="$ITERATION"
 
 # Run k6 test
 if [[ "$MODE" == "spike" ]]; then
   k6 run --out json="${MODE}_${ENDPOINT:1}.json" benchmark_scripts/k6_test.js
 else
-  k6 run benchmark_scripts/k6_test.js
+  for ((i=1; i<=$ITERATIONS; i++))
+  do
+    echo "Running iteration $i of $ITERATIONS..."
+    export ITERATION="$i"
+    k6 run benchmark_scripts/k6_test.js
+    sleep 1
+  done
 fi
 
 # Wait a moment between tests
-echo "Waiting 5 seconds before next test..."
-sleep 5
+sleep 1
