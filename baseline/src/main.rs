@@ -37,12 +37,12 @@ fn handle_connection(mut stream: TcpStream) {
             // Some("img") => ("HTTP/1.1 200 OK", fs::read_to_string("src/img.html").unwrap(), "text/html"),
             // Some("imgs") => ("HTTP/1.1 200 OK", fs::read_to_string("src/imgs.html").unwrap(), "text/html"),
             // Some("vid") => ("HTTP/1.1 200 OK", fs::read_to_string("src/vid.html").unwrap(), "text/html"),
-            Some(file_name) if file_name.ends_with(".jpg") => ("HTTP/1.1 200 OK", format!("{}", file_name), "image/jpeg"),
-            Some(file_name) if file_name.ends_with(".mp4") => ("HTTP/1.1 200 OK", format!("{}", file_name), "video/mp4"),
+            Some(file_name) if file_name.ends_with(".jpg") => ("HTTP/1.1 200 OK", format!("assets/{}", file_name), "image/jpeg"),
+            Some(file_name) if file_name.ends_with(".mp4") => ("HTTP/1.1 200 OK", format!("assets/{}", file_name), "video/mp4"),
             _ => ("HTTP/1.1 404 NOT FOUND", fs::read_to_string("src/404.html").unwrap(), "text/html"),
         };
     
-        if content_type == "image/jpg" {
+        if content_type == "image/jpeg" {
             let content_byte = fs::read(contents).unwrap();
             let length = content_byte.len();
             let response = 
@@ -105,7 +105,7 @@ fn handle_connection(mut stream: TcpStream) {
 }
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:8000").unwrap();
+    let listener = TcpListener::bind("0.0.0.0:8000").unwrap();
     let pool = ThreadPool::new(10);
 
     for stream in listener.incoming() {

@@ -144,6 +144,11 @@ export default async function() {
       'status is 200': (r) => r.status === 200,
       'content-type is text/plain': (r) => r.headers['Content-Type'] && r.headers['Content-Type'].includes('text/plain'),
     });
+  } else if (endpoint === '/helloform') {
+    success = check(response, {
+      'status is 200': (r) => r.status === 200,
+      'content-type is text/plain': (r) => r.headers['Content-Type'] && r.headers['Content-Type'].includes('text/plain'),
+    });
   } else {
     // Generic checks for other endpoints
     success = check(response, {

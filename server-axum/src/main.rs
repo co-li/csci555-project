@@ -19,7 +19,7 @@ async fn main() {
         .route("/json", get(json))
         .route("/delayed", get(delayed))
         .route("/helloform", post(hello_form))
-        .nest_service("/assets", ServeDir::new("assets"));
+        .fallback_service(ServeDir::new("assets"));
 
     // run our app with hyper, listening globally on port 8000
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8000").await.unwrap();
